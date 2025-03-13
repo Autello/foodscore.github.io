@@ -9,7 +9,6 @@
 <body>
     <div class="container">
         <h1>Product Scoring Calculator</h1>
-
         <div class="input-group">
             <label for="productName">Product Name</label>
             <input type="text" id="productName">
@@ -33,24 +32,6 @@
         <button onclick="calculate()">Calculate</button>
         <div class="result" id="result"></div>
         <button class="copy-btn" onclick="copyResult()">Copy Result</button>
-
-        <h2>Previous Results</h2>
-        <table id="resultsTable">
-            <thead>
-                <tr>
-                    <th>Product Name</th>
-                    <th>Total Score</th>
-                    <th>Calorie Density</th>
-                    <th>Calorie Price</th>
-                    <th>Total Calories</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Results will be appended here -->
-            </tbody>
-        </table>
-        <button class="clear-all-btn" onclick="clearAllResults()">Clear All Results</button>
     </div>
 
     <script src="script.js"></script>
