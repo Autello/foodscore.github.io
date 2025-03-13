@@ -27,13 +27,12 @@ function calculate() {
     var newRow = resultsTable.insertRow();
 
     newRow.innerHTML = `
-        <td><button class="copy-btn" onclick="copyRow(this)">Copy</button></td>
         <td>${productName}</td>
         <td>${totalScore.toFixed(0)}/100</td>
         <td>${caloriesPerOunce.toFixed(1)} cal/oz</td>
         <td>${caloriesPerCent.toFixed(1)} cal/¢</td>
         <td>${totalCalories.toLocaleString()} cal</td>
-        <td><button class="clear-btn" onclick="clearEntry(this)">Clear</button></td>
+        <td><button onclick="clearEntry(this)">Clear</button></td>
     `;
 
     saveResults();
@@ -45,11 +44,11 @@ function saveResults() {
     for (var i = 0; i < rows.length; i++) {
         var row = rows[i];
         results.push({
-            productName: row.cells[1].innerText,
-            totalScore: row.cells[2].innerText,
-            calorieDensity: row.cells[3].innerText,
-            caloriePrice: row.cells[4].innerText,
-            totalCalories: row.cells[5].innerText
+            productName: row.cells[0].innerText,
+            totalScore: row.cells[1].innerText,
+            calorieDensity: row.cells[2].innerText,
+            caloriePrice: row.cells[3].innerText,
+            totalCalories: row.cells[4].innerText
         });
     }
     localStorage.setItem("productResults", JSON.stringify(results));
@@ -62,13 +61,12 @@ function loadResults() {
         savedResults.forEach(function(result) {
             var newRow = resultsTable.insertRow();
             newRow.innerHTML = `
-                <td><button class="copy-btn" onclick="copyRow(this)">Copy</button></td>
                 <td>${result.productName}</td>
                 <td>${result.totalScore}</td>
                 <td>${result.calorieDensity}</td>
                 <td>${result.caloriePrice}</td>
                 <td>${result.totalCalories}</td>
-                <td><button class="clear-btn" onclick="clearEntry(this)">Clear</button></td>
+                <td><button onclick="clearEntry(this)">Clear</button></td>
             `;
         });
     }
@@ -87,16 +85,6 @@ function clearAllResults() {
         resultsTable.innerHTML = ''; // Clear all rows
         localStorage.removeItem("productResults"); // Remove saved results from localStorage
     }
-}
-
-function copyRow(button) {
-    var row = button.parentNode.parentNode;
-    var resultText = `${row.cells[1].innerText} - ${row.cells[2].innerText} - ${row.cells[3].innerText} - ${row.cells[4].innerText} - ${row.cells[5].innerText}`;
-    navigator.clipboard.writeText(resultText).then(function() {
-        alert("Result copied to clipboard!");
-    }, function(err) {
-        alert("Error copying result: " + err);
-    });
 }
 
 function copyResult() {
