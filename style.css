@@ -21,7 +21,7 @@ body {
 
 label {
     display: block; /* Make sure label is block-level */
-    margin-bottom: 50px; /* Space between label and input */
+    margin-bottom: 5px; /* Space between label and input */
     text-align: left; /* Align label text to the left */
 }
 
