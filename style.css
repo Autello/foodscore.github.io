@@ -16,12 +16,12 @@ body {
 }
 
 .input-group {
-    margin-bottom: 200px; /* Space between each label-input pair */
+    margin-bottom: 20px; /* Space between each label-input pair */
 }
 
 label {
     display: block; /* Make sure label is block-level */
-    margin-bottom: 5px; /* Space between label and input */
+    margin-bottom: 50px; /* Space between label and input */
     text-align: left; /* Align label text to the left */
 }
 
