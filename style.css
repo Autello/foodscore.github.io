@@ -16,7 +16,8 @@ body {
 }
 
 .input-group {
-    border: 1px solid red; /* temporary */
+    margin-bottom: 200px !important;
+    border: 1px solid red !important;
 }
 
 label {
