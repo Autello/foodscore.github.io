@@ -16,16 +16,16 @@ body {
 }
 
 label {
-    display: block; /* Ensures the label is on its own line */
-    margin-bottom: 5px; /* Small space between the label and input */
+    display: block; /* Ensures label is on its own line */
+    margin-bottom: 5px; /* Space between the label and input */
     text-align: left; /* Align label text to the left */
 }
 
 input {
-    display: block;
-    margin: 10px auto;
+    display: block; /* Ensures input is on its own line */
+    margin-bottom: 15px; /* Adds space between each input */
     padding: 8px;
-    width: 80%;
+    width: 100%; /* Makes inputs take the full width of the container */
 }
 
 button {
