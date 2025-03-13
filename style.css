@@ -16,19 +16,19 @@ body {
 }
 
 .input-group {
-    margin-bottom: 20px; /* Space between each label-input pair */
+    margin-bottom: 20px; 
 }
 
 label {
-    display: block; /* Make sure label is block-level */
-    margin-bottom: 5px; /* Space between label and input */
-    text-align: left; /* Align label text to the left */
+    display: block; 
+    margin-bottom: 5px; 
+    text-align: left; 
 }
 
 input {
-    width: 100%; /* Make inputs fill the container */
+    width: 100%; 
     padding: 8px;
-    margin-bottom: 10px; /* Add some space between inputs */
+    margin-bottom: 10px; 
 }
 
 button {
