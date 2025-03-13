@@ -27,6 +27,7 @@ function calculate() {
     var newRow = resultsTable.insertRow();
 
     newRow.innerHTML = `
+        <td><button onclick="copyRow(this)">Copy</button></td>
         <td>${productName}</td>
         <td>${totalScore.toFixed(0)}/100</td>
         <td>${caloriesPerOunce.toFixed(1)} cal/oz</td>
@@ -38,63 +39,23 @@ function calculate() {
     saveResults();
 }
 
-function saveResults() {
-    var results = [];
-    var rows = document.getElementById("resultsTable").getElementsByTagName('tbody')[0].rows;
-    for (var i = 0; i < rows.length; i++) {
-        var row = rows[i];
-        results.push({
-            productName: row.cells[0].innerText,
-            totalScore: row.cells[1].innerText,
-            calorieDensity: row.cells[2].innerText,
-            caloriePrice: row.cells[3].innerText,
-            totalCalories: row.cells[4].innerText
-        });
-    }
-    localStorage.setItem("productResults", JSON.stringify(results));
-}
-
-function loadResults() {
-    var savedResults = JSON.parse(localStorage.getItem("productResults"));
-    if (savedResults) {
-        var resultsTable = document.getElementById("resultsTable").getElementsByTagName('tbody')[0];
-        savedResults.forEach(function(result) {
-            var newRow = resultsTable.insertRow();
-            newRow.innerHTML = `
-                <td>${result.productName}</td>
-                <td>${result.totalScore}</td>
-                <td>${result.calorieDensity}</td>
-                <td>${result.caloriePrice}</td>
-                <td>${result.totalCalories}</td>
-                <td><button onclick="clearEntry(this)">Clear</button></td>
-            `;
-        });
-    }
-}
-
-function clearEntry(button) {
+function copyRow(button) {
+    // Get the row of the button that was clicked
     var row = button.parentNode.parentNode;
-    row.parentNode.removeChild(row);
-    saveResults();
-}
-
-function clearAllResults() {
-    var confirmClear = confirm("Are you sure you want to clear all entries? This action cannot be undone.");
-    if (confirmClear) {
-        var resultsTable = document.getElementById("resultsTable").getElementsByTagName('tbody')[0];
-        resultsTable.innerHTML = ''; // Clear all rows
-        localStorage.removeItem("productResults"); // Remove saved results from localStorage
-    }
-}
-
-function copyResult() {
-    var resultText = document.getElementById("result").innerText;
+    
+    // Get the cells in the row and format the text to be copied
+    var productName = row.cells[1].innerText;
+    var totalScore = row.cells[2].innerText;
+    var calorieDensity = row.cells[3].innerText;
+    var caloriePrice = row.cells[4].innerText;
+    var totalCalories = row.cells[5].innerText;
+    
+    var resultText = `${totalScore} - ${calorieDensity} - ${caloriePrice} - ${totalCalories}`;
+    
+    // Copy the result text to the clipboard
     navigator.clipboard.writeText(resultText).then(function() {
         alert("Result copied to clipboard!");
     }, function(err) {
         alert("Error copying result: " + err);
     });
 }
-
-// Load saved results on page load
-window.onload = loadResults;
