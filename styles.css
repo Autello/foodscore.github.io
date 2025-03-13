@@ -117,5 +117,5 @@ td {
 }
 
 .clear-all-btn:hover {
-    background-color: #c82333;
+    background-color: #c82333; /* note */
 }
