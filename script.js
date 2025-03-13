@@ -1,90 +1,76 @@
-function calculateScore() {
-    let productName = document.getElementById("productName").value;
-    let price = parseFloat(document.getElementById("price").value);
-    let weight = parseFloat(document.getElementById("weight").value);
-    let servings = parseFloat(document.getElementById("servings").value);
-    let calories = parseFloat(document.getElementById("calories").value);
-
-
-    // Check if all input fields have valid values
-
-
-    if (isNaN(price) || isNaN(weight) || isNaN(servings) || isNaN(calories)) {
-        document.getElementById("result").innerText = "Please enter all values.";
-        return;
-    }
-
-    
-    // Calculate values based on the inputs
-
-
-    let cents = price * 100;
-    let totalCalories = calories * servings;
-    let caloriesPerCent = totalCalories / cents;
-    let caloriesPerOunce = totalCalories / weight;
-
-    
-    // Calculate weight and price scores
-
-
-    let weightScore = (caloriesPerOunce / 240) * 50;
-    let priceScore = (caloriesPerCent / 30) * 50;
-    let totalScore = weightScore + priceScore;
-
-    
-    // Round the total score down to the nearest whole number
-
-
-    totalScore = Math.floor(totalScore);
-
-    
-    // Format the results (calories per ounce, calories per cent, total calories)
-
-
-    let caloriesPerOunceFormatted = caloriesPerOunce.toFixed(0); // Remove decimals
-    let caloriesPerCentFormatted = caloriesPerCent.toFixed(0);   // Remove decimals
-    let totalCaloriesFormatted = totalCalories.toLocaleString(); // Add commas for large numbers
-
-    
-    // Display the result in the specified format
-
-
-    document.getElementById("result").innerText = `${totalScore}/100 - ${caloriesPerOunceFormatted} cal/oz - ${caloriesPerCentFormatted} cal/¢ - ${totalCaloriesFormatted} cal`;
+* {
+    box-sizing: border-box;
 }
 
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
 
-// New function to copy the result to the clipboard
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
 
-function copyToClipboard() {
+.input-group {
+    margin-bottom: 20px;
+}
 
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
 
-    // Get the result text
+input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
 
-    
-    let resultText = document.getElementById("result").innerText;
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+}
 
-    
-    // Check if there is any result to copy
+button:hover {
+    background-color: #0056b3;
+}
 
-    
-    if (resultText.trim() === "") {
-        alert("No result to copy.");
-        return;
-    }
+.result {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
 
-    
-    // Use the Clipboard API to copy text to the clipboard
+.copy-btn {
+    margin-top: 20px;
+    display: block;
+    width: 100%;
+    background-color: #28a745;
+}
 
-    
-    navigator.clipboard.writeText(resultText).then(function() {
-
-        
-        // Show a message indicating the result has been copied
-
-        
-        alert("Result copied to clipboard!");
-    }).catch(function(error) {
-        alert("Failed to copy the result: " + error);
-    });
+.copy-btn:hover {
+    background-color: #218838;
 }
