@@ -1,70 +1,100 @@
 function calculate() {
-    // Get input values
-    const productName = document.getElementById('productName').value;
-    const price = parseFloat(document.getElementById('price').value);
-    const weight = parseFloat(document.getElementById('weight').value);
-    const totalServings = parseFloat(document.getElementById('totalServings').value);
-    const caloriesPerServing = parseFloat(document.getElementById('caloriesPerServing').value);
+    var productName = document.getElementById("productName").value;
+    var price = parseFloat(document.getElementById("price").value);
+    var weight = parseFloat(document.getElementById("weight").value);
+    var totalServings = parseInt(document.getElementById("totalServings").value);
+    var caloriesPerServing = parseInt(document.getElementById("caloriesPerServing").value);
 
-    // Perform calculations
-    const cents = price * 100;
-    const totalCalories = caloriesPerServing * totalServings;
-    const caloriesPerCent = totalCalories / cents;
-    const caloriesPerOunce = totalCalories / weight;
-    
-    // Scoring calculations
-    const weightScore = (caloriesPerOunce / 240) * 50;
-    const priceScore = (caloriesPerCent / 30) * 50;
-    const totalScore = weightScore + priceScore;
+    // Calculations
+    var cents = price * 100;
+    var totalCalories = caloriesPerServing * totalServings;
+    var caloriesPerCent = totalCalories / cents;
+    var caloriesPerOunce = totalCalories / weight;
 
-    // Display result
-    const resultText = `${totalScore.toFixed(0)}/100 - ${caloriesPerOunce.toFixed(2)} cal/oz - ${caloriesPerCent.toFixed(2)} cal/¢ - ${totalCalories.toFixed(0)} cal`;
+    // Scoring
+    var weightScore = (caloriesPerOunce / 240) * 50;
+    var priceScore = (caloriesPerCent / 30) * 50;
+    var totalScore = weightScore + priceScore;
 
-    // Display result in the result div
-    document.getElementById('result').textContent = resultText;
+    // Result
+    var result = `${totalScore.toFixed(0)}/100 - ${caloriesPerOunce.toFixed(1)} cal/oz - ${caloriesPerCent.toFixed(1)} cal/¢ - ${totalCalories.toLocaleString()} cal`;
 
-    // Add result to the table
-    const resultsTable = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
-    const newRow = resultsTable.insertRow();
+    // Display the result
+    document.getElementById("result").innerText = result;
+
+    // Save to localStorage
+    var resultsTable = document.getElementById("resultsTable").getElementsByTagName('tbody')[0];
+    var newRow = resultsTable.insertRow();
 
     newRow.innerHTML = `
         <td>${productName}</td>
-        <td>${totalScore.toFixed(0)} / 100</td>
-        <td>${caloriesPerOunce.toFixed(2)} cal/oz</td>
-        <td>${caloriesPerCent.toFixed(2)} cal/¢</td>
-        <td>${totalCalories.toFixed(0)} cal</td>
-        <td>
-            <button class="clear-btn" onclick="clearEntry(this)">Clear</button>
-            <button class="copy-btn" onclick="copyEntry(this)">Copy</button>
-        </td>
+        <td>${totalScore.toFixed(0)}/100</td>
+        <td>${caloriesPerOunce.toFixed(1)} cal/oz</td>
+        <td>${caloriesPerCent.toFixed(1)} cal/¢</td>
+        <td>${totalCalories.toLocaleString()} cal</td>
+        <td><button onclick="clearEntry(this)">Clear</button></td>
     `;
+
+    saveResults();
+}
+
+function saveResults() {
+    var results = [];
+    var rows = document.getElementById("resultsTable").getElementsByTagName('tbody')[0].rows;
+    for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        results.push({
+            productName: row.cells[0].innerText,
+            totalScore: row.cells[1].innerText,
+            calorieDensity: row.cells[2].innerText,
+            caloriePrice: row.cells[3].innerText,
+            totalCalories: row.cells[4].innerText
+        });
+    }
+    localStorage.setItem("productResults", JSON.stringify(results));
+}
+
+function loadResults() {
+    var savedResults = JSON.parse(localStorage.getItem("productResults"));
+    if (savedResults) {
+        var resultsTable = document.getElementById("resultsTable").getElementsByTagName('tbody')[0];
+        savedResults.forEach(function(result) {
+            var newRow = resultsTable.insertRow();
+            newRow.innerHTML = `
+                <td>${result.productName}</td>
+                <td>${result.totalScore}</td>
+                <td>${result.calorieDensity}</td>
+                <td>${result.caloriePrice}</td>
+                <td>${result.totalCalories}</td>
+                <td><button onclick="clearEntry(this)">Clear</button></td>
+            `;
+        });
+    }
 }
 
 function clearEntry(button) {
-    const row = button.closest('tr');
-    row.remove();
-}
-
-function copyEntry(button) {
-    const row = button.closest('tr');
-    const resultText = Array.from(row.cells)
-        .slice(0, 5) // Get the first 5 cells of the row (excluding the buttons)
-        .map(cell => cell.textContent)
-        .join(' - '); // Join the text with ' - '
-
-    // Copy the result text to clipboard
-    navigator.clipboard.writeText(resultText)
-        .then(() => {
-            alert('Result copied to clipboard!');
-        })
-        .catch(err => {
-            console.error('Error copying to clipboard: ', err);
-        });
+    var row = button.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+    saveResults();
 }
 
 function clearAllResults() {
-    const resultsTable = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
-    if (confirm("Are you sure you want to clear all results?")) {
+    var confirmClear = confirm("Are you sure you want to clear all entries? This action cannot be undone.");
+    if (confirmClear) {
+        var resultsTable = document.getElementById("resultsTable").getElementsByTagName('tbody')[0];
         resultsTable.innerHTML = ''; // Clear all rows
+        localStorage.removeItem("productResults"); // Remove saved results from localStorage
     }
 }
+
+function copyResult() {
+    var resultText = document.getElementById("result").innerText;
+    navigator.clipboard.writeText(resultText).then(function() {
+        alert("Result copied to clipboard!");
+    }, function(err) {
+        alert("Error copying result: " + err);
+    });
+}
+
+// Load saved results on page load
+window.onload = loadResults;
