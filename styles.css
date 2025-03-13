@@ -62,14 +62,15 @@ button.clear:hover {
 /* Table Styling */
 table {
   width: 100%;
+  border: 2px solid #fff; /* Table border */
   border-collapse: collapse; /* Collapse borders between cells */
   margin-top: 20px;
 }
 
 th, td {
-  border: 1px solid #fff; /* White border for visibility */
-  padding: 8px; /* Add some space for text */
-  text-align: center; /* Optional: Center text in columns */
+  border: 1px solid #fff; /* White border for each cell */
+  padding: 8px; /* Add space for text */
+  text-align: center; /* Center text in columns */
 }
 
 th {
@@ -80,6 +81,7 @@ td {
   background-color: #222; /* Dark background for table data */
 }
 
+/* Clear all button */
 button.clear-all {
   background-color: #ffc107;
   border: none;
