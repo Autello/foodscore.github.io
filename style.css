@@ -15,17 +15,20 @@ body {
     margin: 50px auto;
 }
 
+.input-group {
+    margin-bottom: 20px; /* Space between each label-input pair */
+}
+
 label {
-    display: block; /* Ensures label is on its own line */
-    margin-bottom: 5px; /* Space between the label and input */
+    display: block; /* Make sure label is block-level */
+    margin-bottom: 5px; /* Space between label and input */
     text-align: left; /* Align label text to the left */
 }
 
 input {
-    display: block; /* Ensures input is on its own line */
-    margin-bottom: 15px; /* Adds space between each input */
+    width: 100%; /* Make inputs fill the container */
     padding: 8px;
-    width: 100%; /* Makes inputs take the full width of the container */
+    margin-bottom: 10px; /* Add some space between inputs */
 }
 
 button {
