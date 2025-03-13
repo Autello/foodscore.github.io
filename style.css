@@ -28,7 +28,7 @@ label {
 input {
     width: 100%; /* Make inputs fill the container */
     padding: 8px;
-    margin-bottom: 10px; /* Add some space between inputs */
+    margin-bottom: 100px; /* Add some space between inputs */
 }
 
 button {
