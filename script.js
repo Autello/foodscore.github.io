@@ -1,38 +1,100 @@
-function calculateScore() {
-    const price = parseFloat(document.getElementById('price').value);
-    const weight = parseFloat(document.getElementById('weight').value);
-    const totalServings = parseInt(document.getElementById('totalServings').value);
-    const caloriesPerServing = parseInt(document.getElementById('caloriesPerServing').value);
-
-    if (isNaN(price) || isNaN(weight) || isNaN(totalServings) || isNaN(caloriesPerServing)) {
-        alert("Please fill in all fields with valid data.");
-        return;
-    }
+function calculate() {
+    var productName = document.getElementById("productName").value;
+    var price = parseFloat(document.getElementById("price").value);
+    var weight = parseFloat(document.getElementById("weight").value);
+    var totalServings = parseInt(document.getElementById("totalServings").value);
+    var caloriesPerServing = parseInt(document.getElementById("caloriesPerServing").value);
 
     // Calculations
-    const cents = price * 100;
-    const totalCalories = caloriesPerServing * totalServings;
-    const caloriesPerCent = totalCalories / cents;
-    const caloriesPerOunce = totalCalories / weight;
+    var cents = price * 100;
+    var totalCalories = caloriesPerServing * totalServings;
+    var caloriesPerCent = totalCalories / cents;
+    var caloriesPerOunce = totalCalories / weight;
 
     // Scoring
-    const weightScore = (caloriesPerOunce / 240) * 50;
-    const priceScore = (caloriesPerCent / 30) * 50;
-    const totalScore = Math.round(weightScore + priceScore);
+    var weightScore = (caloriesPerOunce / 240) * 50;
+    var priceScore = (caloriesPerCent / 30) * 50;
+    var totalScore = weightScore + priceScore;
 
-    // Format Result
-    const resultText = `${totalScore}/100 - ${caloriesPerOunce.toFixed(2)} cal/oz - ${caloriesPerCent.toFixed(2)} cal/¢ - ${totalCalories.toLocaleString()} cal`;
+    // Result
+    var result = `${totalScore.toFixed(0)}/100 - ${caloriesPerOunce.toFixed(1)} cal/oz - ${caloriesPerCent.toFixed(1)} cal/¢ - ${totalCalories.toLocaleString()} cal`;
 
-    // Show result
-    document.getElementById('result').textContent = resultText;
-    document.getElementById('copyBtn').style.display = "block";
+    // Display the result
+    document.getElementById("result").innerText = result;
+
+    // Save to localStorage
+    var resultsTable = document.getElementById("resultsTable").getElementsByTagName('tbody')[0];
+    var newRow = resultsTable.insertRow();
+
+    newRow.innerHTML = `
+        <td>${productName}</td>
+        <td>${totalScore.toFixed(0)}/100</td>
+        <td>${caloriesPerOunce.toFixed(1)} cal/oz</td>
+        <td>${caloriesPerCent.toFixed(1)} cal/¢</td>
+        <td>${totalCalories.toLocaleString()} cal</td>
+        <td><button onclick="clearEntry(this)">Clear</button></td>
+    `;
+
+    saveResults();
 }
 
-function copyToClipboard() {
-    const resultText = document.getElementById('result').textContent;
-    navigator.clipboard.writeText(resultText).then(() => {
-        alert('Result copied to clipboard!');
-    }).catch(err => {
-        alert('Failed to copy result: ' + err);
+function saveResults() {
+    var results = [];
+    var rows = document.getElementById("resultsTable").getElementsByTagName('tbody')[0].rows;
+    for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        results.push({
+            productName: row.cells[0].innerText,
+            totalScore: row.cells[1].innerText,
+            calorieDensity: row.cells[2].innerText,
+            caloriePrice: row.cells[3].innerText,
+            totalCalories: row.cells[4].innerText
+        });
+    }
+    localStorage.setItem("productResults", JSON.stringify(results));
+}
+
+function loadResults() {
+    var savedResults = JSON.parse(localStorage.getItem("productResults"));
+    if (savedResults) {
+        var resultsTable = document.getElementById("resultsTable").getElementsByTagName('tbody')[0];
+        savedResults.forEach(function(result) {
+            var newRow = resultsTable.insertRow();
+            newRow.innerHTML = `
+                <td>${result.productName}</td>
+                <td>${result.totalScore}</td>
+                <td>${result.calorieDensity}</td>
+                <td>${result.caloriePrice}</td>
+                <td>${result.totalCalories}</td>
+                <td><button onclick="clearEntry(this)">Clear</button></td>
+            `;
+        });
+    }
+}
+
+function clearEntry(button) {
+    var row = button.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+    saveResults();
+}
+
+function clearAllResults() {
+    var confirmClear = confirm("Are you sure you want to clear all entries? This action cannot be undone.");
+    if (confirmClear) {
+        var resultsTable = document.getElementById("resultsTable").getElementsByTagName('tbody')[0];
+        resultsTable.innerHTML = ''; // Clear all rows
+        localStorage.removeItem("productResults"); // Remove saved results from localStorage
+    }
+}
+
+function copyResult() {
+    var resultText = document.getElementById("result").innerText;
+    navigator.clipboard.writeText(resultText).then(function() {
+        alert("Result copied to clipboard!");
+    }, function(err) {
+        alert("Error copying result: " + err);
     });
 }
+
+// Load saved results on page load
+window.onload = loadResults;
