@@ -9,11 +9,32 @@
 <body>
     <div class="container">
         <h1>Food Score Calculator</h1>
-        <label>Product Name: <input type="text" id="productName"></label>
-        <label>Price ($): <input type="number" id="price" step="0.01"></label>
-        <label>Weight (oz): <input type="number" id="weight"></label>
-        <label>Servings: <input type="number" id="servings"></label>
-        <label>Calories per Serving: <input type="number" id="calories"></label>
+        
+        <div class="input-group">
+            <label for="productName">Product Name:</label>
+            <input type="text" id="productName">
+        </div>
+        
+        <div class="input-group">
+            <label for="price">Price ($):</label>
+            <input type="number" id="price" step="0.01">
+        </div>
+        
+        <div class="input-group">
+            <label for="weight">Weight (oz):</label>
+            <input type="number" id="weight">
+        </div>
+        
+        <div class="input-group">
+            <label for="servings">Servings:</label>
+            <input type="number" id="servings">
+        </div>
+        
+        <div class="input-group">
+            <label for="calories">Calories per Serving:</label>
+            <input type="number" id="calories">
+        </div>
+        
         <button onclick="calculateScore()">Calculate</button>
         <h2 id="result"></h2> <!-- Result is here -->
         <button onclick="copyToClipboard()">Copy Result</button> <!-- Move Copy button here -->
