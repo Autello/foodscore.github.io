@@ -1,1 +1,45 @@
+/* Style for the input container */
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 300px;
+  margin: 0 auto;
+}
 
+/* Label styling */
+.input-container label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+/* Input field styling */
+.input-container input {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Focus effect for inputs */
+.input-container input:focus {
+  border-color: #4A90E2;
+  outline: none;
+}
+
+/* Placeholder text styling */
+.input-container input::placeholder {
+  color: #aaa;
+}
+
+/* Responsive styling */
+@media (max-width: 500px) {
+  .input-container {
+    width: 90%;
+  }
+}
