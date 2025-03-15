@@ -1,58 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Scoring</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calorie Score Calculator</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Product Scoring Calculator</h1>
-
-        <div class="input-group">
-            <label for="productName">Product Name</label>
-            <input type="text" id="productName">
-        </div>
-        <div class="input-group">
-            <label for="price">Price (in dollars)</label>
-            <input type="number" id="price">
-        </div>
-        <div class="input-group">
-            <label for="weight">Weight (in ounces)</label>
-            <input type="number" id="weight">
-        </div>
-        <div class="input-group">
-            <label for="totalServings">Total Servings</label>
-            <input type="number" id="totalServings">
-        </div>
-        <div class="input-group">
-            <label for="caloriesPerServing">Calories per Serving</label>
-            <input type="number" id="caloriesPerServing">
-        </div>
-        <button onclick="calculate()">Calculate</button>
-        <div class="result" id="result"></div>
-        <button class="copy-btn" onclick="copyResult()">Copy Result</button>
-
-        <h2>Previous Results</h2>
-        <table id="resultsTable">
-            <thead>
-                <tr>
-                    <th>Product Name</th>
-                    <th>Total Score</th>
-                    <th>Calorie Density</th>
-                    <th>Calorie Price</th>
-                    <th>Total Calories</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Results will be appended here -->
-            </tbody>
-        </table>
-        <button class="clear-all-btn" onclick="clearAllResults()">Clear All Results</button>
+  <div class="container">
+    <h1>Calorie Score Calculator</h1>
+    
+    <div class="input-container">
+      <label for="product-name">Product Name:</label>
+      <input type="text" id="product-name" placeholder="Enter Product Name">
+      
+      <label for="price">Price ($):</label>
+      <input type="number" id="price" placeholder="Enter Price" step="0.01">
+      
+      <label for="weight">Weight (oz):</label>
+      <input type="number" id="weight" placeholder="Enter Weight (oz)" step="0.1">
+      
+      <label for="total-servings">Total Servings:</label>
+      <input type="number" id="total-servings" placeholder="Enter Total Servings">
+      
+      <label for="calories-per-serving">Calories per Serving:</label>
+      <input type="number" id="calories-per-serving" placeholder="Enter Calories per Serving">
+      
+      <button id="add-row">Add Product</button>
     </div>
+    
+    <div class="search-container">
+      <input type="text" id="search" placeholder="Search by Product Name">
+    </div>
+    
+    <table id="results-table">
+      <thead>
+        <tr>
+          <th>Export</th>
+          <th>Score</th>
+          <th>Name</th>
+          <th>Calorie Price</th>
+          <th>Calorie Density</th>
+          <th>Clear All</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Rows will be dynamically added here -->
+      </tbody>
+    </table>
+  </div>
 
-    <script src="script.js"></script> <!-- Results will be appended here -->
+  <script src="script.js"></script>
 </body>
 </html>
