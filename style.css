@@ -46,15 +46,37 @@ button {
   width: 100%;
   padding: 10px;
   margin-top: 20px;
-  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #45a049;
+/* Styling for the Add Product button */
+button#add-row {
+  background-color: #4caf50; /* Green for Add Product button */
+}
+
+button#add-row:hover {
+  background-color: #45a049; /* Darker green for hover effect */
+}
+
+/* Styling for Clear button (individual row clear) */
+button.clear {
+  background-color: #f44336; /* Red for Clear button */
+}
+
+button.clear:hover {
+  background-color: #e53935; /* Darker red for hover effect */
+}
+
+/* Styling for Clear All button */
+button#clear-all {
+  background-color: #f44336; /* Same red color for Clear All button */
+}
+
+button#clear-all:hover {
+  background-color: #e53935; /* Darker red for hover effect */
 }
 
 .search-container {
