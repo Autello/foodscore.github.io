@@ -1,3 +1,8 @@
+body {
+    background-color: black;
+}
+
+
 /* Style for the input container */
 .input-container {
   display: flex;
