@@ -1,100 +1,139 @@
-function calculate() {
-    var productName = document.getElementById("productName").value;
-    var price = parseFloat(document.getElementById("price").value);
-    var weight = parseFloat(document.getElementById("weight").value);
-    var totalServings = parseInt(document.getElementById("totalServings").value);
-    var caloriesPerServing = parseInt(document.getElementById("caloriesPerServing").value);
-
-    // Calculations
-    var cents = price * 100;
-    var totalCalories = caloriesPerServing * totalServings;
-    var caloriesPerCent = totalCalories / cents;
-    var caloriesPerOunce = totalCalories / weight;
-
-    // Scoring
-    var weightScore = (caloriesPerOunce / 240) * 50;
-    var priceScore = (caloriesPerCent / 30) * 50;
-    var totalScore = weightScore + priceScore;
-
-    // Result
-    var result = `${totalScore.toFixed(0)}/100 - ${caloriesPerOunce.toFixed(1)} cal/oz - ${caloriesPerCent.toFixed(1)} cal/¢ - ${totalCalories.toLocaleString()} cal`;
-
-    // Display the result
-    document.getElementById("result").innerText = result;
-
-    // Save to localStorage
-    var resultsTable = document.getElementById("resultsTable").getElementsByTagName('tbody')[0];
-    var newRow = resultsTable.insertRow();
-
-    newRow.innerHTML = `
-        <td>${productName}</td>
-        <td>${totalScore.toFixed(0)}/100</td>
-        <td>${caloriesPerOunce.toFixed(1)} cal/oz</td>
-        <td>${caloriesPerCent.toFixed(1)} cal/¢</td>
-        <td>${totalCalories.toLocaleString()} cal</td>
-        <td><button onclick="clearEntry(this)">Clear</button></td>
-    `;
-
-    saveResults();
+// Helper function to save to localStorage
+function saveToLocalStorage(results) {
+  localStorage.setItem('calorieResults', JSON.stringify(results));
 }
 
-function saveResults() {
-    var results = [];
-    var rows = document.getElementById("resultsTable").getElementsByTagName('tbody')[0].rows;
-    for (var i = 0; i < rows.length; i++) {
-        var row = rows[i];
-        results.push({
-            productName: row.cells[0].innerText,
-            totalScore: row.cells[1].innerText,
-            calorieDensity: row.cells[2].innerText,
-            caloriePrice: row.cells[3].innerText,
-            totalCalories: row.cells[4].innerText
-        });
+// Helper function to load from localStorage
+function loadFromLocalStorage() {
+  const savedResults = localStorage.getItem('calorieResults');
+  return savedResults ? JSON.parse(savedResults) : [];
+}
+
+// Function to calculate the scores
+function calculateScores(price, weight, totalServings, caloriesPerServing) {
+  const cents = price * 100;
+  const totalCalories = caloriesPerServing * totalServings;
+  const caloriePrice = totalCalories / cents;
+  const calorieDensity = totalCalories / weight;
+  const weightScore = (calorieDensity / 240) * 50;
+  const priceScore = (caloriePrice / 30) * 50;
+  const totalScore = weightScore + priceScore;
+  
+  return {
+    caloriePrice: `${caloriePrice.toFixed(2)} cal/¢`,
+    calorieDensity: `${calorieDensity.toFixed(0)} cal/oz`,
+    totalScore: totalScore.toFixed(0),
+    totalCalories: totalCalories.toFixed(0)
+  };
+}
+
+// Function to generate a new row in the table
+function addRowToTable(product) {
+  const table = document.querySelector('#results-table tbody');
+  const row = document.createElement('tr');
+  
+  row.innerHTML = `
+    <td><button class="export-btn">Export</button></td>
+    <td>${product.totalScore}</td>
+    <td>${product.name}</td>
+    <td>${product.caloriePrice}</td>
+    <td>${product.calorieDensity}</td>
+    <td><button class="clear-btn">Clear</button></td>
+  `;
+  
+  table.appendChild(row);
+  
+  // Add event listeners for export and clear buttons
+  row.querySelector('.export-btn').addEventListener('click', () => exportRow(product));
+  row.querySelector('.clear-btn').addEventListener('click', () => clearRow(row, product));
+}
+
+// Function to export the row to clipboard
+function exportRow(product) {
+  const text = `${product.totalScore}/100 - ${product.name} - ${product.calorieDensity} - ${product.caloriePrice} - ${product.totalCalories} cal`;
+  navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard!'));
+}
+
+// Function to clear individual row
+function clearRow(row, product) {
+  row.remove();
+  const results = loadFromLocalStorage();
+  const index = results.findIndex(result => result.name === product.name);
+  if (index > -1) {
+    results.splice(index, 1);
+    saveToLocalStorage(results);
+  }
+}
+
+// Function to clear all rows
+function clearAllRows() {
+  const table = document.querySelector('#results-table tbody');
+  table.innerHTML = '';
+  saveToLocalStorage([]);
+}
+
+// Function to filter table by search
+function filterTable(searchValue) {
+  const rows = document.querySelectorAll('#results-table tbody tr');
+  rows.forEach(row => {
+    const nameCell = row.cells[2].textContent.toLowerCase();
+    if (nameCell.includes(searchValue.toLowerCase())) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
     }
-    localStorage.setItem("productResults", JSON.stringify(results));
+  });
 }
 
-function loadResults() {
-    var savedResults = JSON.parse(localStorage.getItem("productResults"));
-    if (savedResults) {
-        var resultsTable = document.getElementById("resultsTable").getElementsByTagName('tbody')[0];
-        savedResults.forEach(function(result) {
-            var newRow = resultsTable.insertRow();
-            newRow.innerHTML = `
-                <td>${result.productName}</td>
-                <td>${result.totalScore}</td>
-                <td>${result.calorieDensity}</td>
-                <td>${result.caloriePrice}</td>
-                <td>${result.totalCalories}</td>
-                <td><button onclick="clearEntry(this)">Clear</button></td>
-            `;
-        });
-    }
-}
+// Event listener for Add Product button
+document.getElementById('add-row').addEventListener('click', () => {
+  const productName = document.getElementById('product-name').value;
+  const price = parseFloat(document.getElementById('price').value);
+  const weight = parseFloat(document.getElementById('weight').value);
+  const totalServings = parseInt(document.getElementById('total-servings').value);
+  const caloriesPerServing = parseInt(document.getElementById('calories-per-serving').value);
+  
+  if (productName && !isNaN(price) && !isNaN(weight) && !isNaN(totalServings) && !isNaN(caloriesPerServing)) {
+    const scores = calculateScores(price, weight, totalServings, caloriesPerServing);
+    const product = {
+      name: productName,
+      price,
+      weight,
+      totalServings,
+      caloriesPerServing,
+      caloriePrice: scores.caloriePrice,
+      calorieDensity: scores.calorieDensity,
+      totalScore: scores.totalScore,
+      totalCalories: scores.totalCalories
+    };
+    
+    // Save the new product to local storage
+    const results = loadFromLocalStorage();
+    results.push(product);
+    saveToLocalStorage(results);
+    
+    // Add row to table
+    addRowToTable(product);
+    
+    // Clear input fields
+    document.getElementById('product-name').value = '';
+    document.getElementById('price').value = '';
+    document.getElementById('weight').value = '';
+    document.getElementById('total-servings').value = '';
+    document.getElementById('calories-per-serving').value = '';
+  }
+});
 
-function clearEntry(button) {
-    var row = button.parentNode.parentNode;
-    row.parentNode.removeChild(row);
-    saveResults();
-}
+// Event listener for Search
+document.getElementById('search').addEventListener('input', (e) => {
+  filterTable(e.target.value);
+});
 
-function clearAllResults() {
-    var confirmClear = confirm("Are you sure you want to clear all entries? This action cannot be undone.");
-    if (confirmClear) {
-        var resultsTable = document.getElementById("resultsTable").getElementsByTagName('tbody')[0];
-        resultsTable.innerHTML = ''; // Clear all rows
-        localStorage.removeItem("productResults"); // Remove saved results from localStorage
-    }
-}
+// Event listener for Clear All button
+document.querySelector('#clear-all')?.addEventListener('click', clearAllRows);
 
-function copyResult() {
-    var resultText = document.getElementById("result").innerText;
-    navigator.clipboard.writeText(resultText).then(function() {
-        alert("Result copied to clipboard!");
-    }, function(err) {
-        alert("Error copying result: " + err);
-    });
-}
-
-// Load saved results on page load
-window.onload = loadResults;
+// Load saved results from local storage
+window.addEventListener('load', () => {
+  const savedResults = loadFromLocalStorage();
+  savedResults.forEach(addRowToTable);
+});
