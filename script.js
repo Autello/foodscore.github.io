@@ -1,7 +1,7 @@
 
 }
 
-// Function to calculate variables
+// Function to calculate variables 1
 function calculateScores(price, weight, totalServings, caloriesPerServing) {
   const cents = price * 100;
   const totalCalories = caloriesPerServing * totalServings;
