@@ -33,7 +33,7 @@ function calculate() {
 
   //display results
 
-  document.getElementById("result").textContent = rounded_score;
+  document.getElementById("result").textContent = rounded_score + "/100";
 }
 
   
