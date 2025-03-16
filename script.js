@@ -30,4 +30,9 @@ function calculate() {
     return;
   }
 
+  //display results
+
+  document.getElementById("result").textContent = score;
+}
+
   
