@@ -17,6 +17,7 @@ function calculate() {
   let weight_score = (calorie_weight / 240) * 50;
   let price_score = (calorie_price / 30) * 50;
   let score = weight_score + price_score;
+  let rounded_score = Math.floor(score * 10) / 10;
 
   //validate inputs
 
@@ -32,7 +33,7 @@ function calculate() {
 
   //display results
 
-  document.getElementById("result").textContent = score;
+  document.getElementById("result").textContent = rounded_score;
 }
 
   
